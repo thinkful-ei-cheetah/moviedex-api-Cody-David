@@ -6,32 +6,42 @@ const morgan = require('morgan');
 const app = express();
 
 app.use(morgan('common'));
-const books = require('./book.js');
+const movies = require('./movieData');
 
-app.get('/books', (req, res) => {
-  const { search = ' ', sort } = req.query;
-  if (sort) {
-    if (!['title', 'rank'].includes(sort)) {
-      return res
-        .status(400)
-        .send('sort must be one of title or rank');
-    }
-  }
+// app.use(function validateBearerToken(req, res, next) {
+//   const apiToken = process.env.API_TOKEN;
+//   const authToken = req.get('Authorization');
+//   if (!authToken || authToken.split(' ')[1] !== apiToken) {
+//     return res.status(401).json({ error: 'Unauthorized request' });
+//   }
+//   next();
+// });
 
-  let results = books
-    .filter(book =>
-      book
-        .title
-        .toLowerCase()
-        .includes(search.toLowerCase()));
+app.get('/movie', (req, res) => {
+  const { search = ' ', genre, country,avg_vote } = req.query;
+  
+//   if () {
+//     if (!['title', 'rank'].includes()) {
+//       return res
+//         .status(400)
+//         .send(' must be one of title or rank');
+//     }
+//   }
 
-  if (sort) {
-    results.sort((a, b) => {
-      return a[sort] > b[sort] ? 1 : a[sort] < b[sort] ? -1 : 0;
-    });
-  }
+//   let results = books
+//     .filter(book =>
+//       book
+//         .title
+//         .toLowerCase()
+//         .includes(search.toLowerCase()));
+
+//   if () {
+//     results.sort((a, b) => {
+//       return a[sort] > b[sort] ? 1 : a[sort] < b[sort] ? -1 : 0;
+//     });
+//   }
   res
-    .json(results);
+    .json(movies);
 });
 
 app.listen(8000, () => {
