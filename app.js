@@ -1,47 +1,47 @@
 'use strict';
 
+require('dotenv').config();
 const express = require('express');
 const morgan = require('morgan');
-
 const app = express();
-
-app.use(morgan('common'));
 const movies = require('./movieData');
+const cors = require('cors');
+const helmet = require('helmet');
 
-// app.use(function validateBearerToken(req, res, next) {
-//   const apiToken = process.env.API_TOKEN;
-//   const authToken = req.get('Authorization');
-//   if (!authToken || authToken.split(' ')[1] !== apiToken) {
-//     return res.status(401).json({ error: 'Unauthorized request' });
-//   }
-//   next();
-// });
+
+app.use(morgan('dev'));
+app.use(cors());
+app.use(helmet());
+
+app.use(function validateBearerToken(req, res, next) {
+  const apiToken = process.env.apiToken;
+  const authToken = req.get('Authorization');
+  if (!authToken || authToken.split(' ')[1] !== apiToken) {
+    return res.status(401).json({ error: 'Unauthorized request' });
+  }
+  next();
+});
 
 app.get('/movie', (req, res) => {
-  const { search = ' ', genre, country,avg_vote } = req.query;
-  
-//   if () {
-//     if (!['title', 'rank'].includes()) {
-//       return res
-//         .status(400)
-//         .send(' must be one of title or rank');
-//     }
-//   }
+  let response = movies;
 
-//   let results = books
-//     .filter(book =>
-//       book
-//         .title
-//         .toLowerCase()
-//         .includes(search.toLowerCase()));
+  if (req.query.genre) {
+    response = response.filter(movie =>
+      movie.genre.toLowerCase().includes(req.query.genre.toLowerCase())
+    );
+  }
 
-//   if () {
-//     results.sort((a, b) => {
-//       return a[sort] > b[sort] ? 1 : a[sort] < b[sort] ? -1 : 0;
-//     });
-//   }
-  res
-    .json(movies);
+  if (req.query.country) {
+    response = response.filter(movie =>
+      movie.country.toLowerCase().includes(req.query.country.toLowerCase())
+    );
+  }
+  if (req.query.avg_vote) {
+    response = response.filter(movie =>
+      Number(movie.avg_vote) >= Number(req.query.avg_vote)
+    );
+  }
+  res.json(response);
 });
 
 app.listen(8000, () => {
