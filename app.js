@@ -14,9 +14,9 @@ app.use(cors());
 app.use(helmet());
 
 app.use(function validateBearerToken(req, res, next) {
-  const apiToken = process.env.apiToken;
+  const API_TOKEN = process.env.API_TOKEN;
   const authToken = req.get('Authorization');
-  if (!authToken || authToken.split(' ')[1] !== apiToken) {
+  if (!authToken || authToken.split(' ')[1] !== API_TOKEN) {
     return res.status(401).json({ error: 'Unauthorized request' });
   }
   next();
