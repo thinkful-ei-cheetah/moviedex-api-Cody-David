@@ -8,7 +8,7 @@ const movies = require('./movieData');
 const cors = require('cors');
 const helmet = require('helmet');
 
-const morganSetting = process.env.NODE_ENV === 'production' ? 'tiny' : 'common'
+const morganSetting = process.env.NODE_ENV === 'production' ? 'tiny' : 'common';
 app.use(morgan(morganSetting));
 app.use(cors());
 app.use(helmet());
@@ -47,7 +47,7 @@ app.get('/movie', (req, res) => {
 app.use((error, req, res, next) => {
   let response;
   if (process.env.NODE_ENV === 'production') {
-    response = { error: { message: 'server error' } }
+    response = { error: { message: 'server error' } };
   } else {
     response = { error };
   }
